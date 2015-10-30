@@ -16,7 +16,7 @@ function setupDataStore(){
     dataStore.highPeakResolution = []
     dataStore.highPeakResolution.fill(0,64)
     dataStore.GRIFFINdetectors = [
-            'GRG01BN00A',
+            /*'GRG01BN00A',
             'GRG01GN00A',
             'GRG01RN00A',
             'GRG01WN00A',
@@ -31,11 +31,11 @@ function setupDataStore(){
             'GRG04BN00A',
             'GRG04GN00A',
             'GRG04RN00A',
-            'GRG04WN00A',
+            'GRG04WN00A',*/
             'GRG05BN00A',
             'GRG05GN00A',
             'GRG05RN00A',
-            'GRG05WN00A',
+            'GRG05WN00A'/*,
             'GRG06BN00A',
             'GRG06GN00A',
             'GRG06RN00A',
@@ -79,7 +79,7 @@ function setupDataStore(){
             'GRG16BN00A',
             'GRG16GN00A',
             'GRG16RN00A',
-            'GRG16WN00A'
+            'GRG16WN00A'*/
         ]
 }
 setupDataStore();
@@ -194,20 +194,20 @@ function fetchCallback(){
     //create a real spectrum viewer
     createFigure()
     setupFigureControl();
-    dataStore.viewer.fitCallback = fitCallback;
 
     //keep the plot list the same height as the plot region
     document.getElementById('plotMenu').style.height = document.getElementById('plotWrap').offsetHeight + 'px';
 
-    //fit all calibration peaks in all spectra
+    //fit both calibration peaks in all spectra
     for(i=0; i<keys.length; i++){
-        fitSpectra(keys[i]);
+        //identify initial regions of interest
+        guessPeaks(keys[i], dataStore.rawData[keys[i]]);
+        fitSpectrum(keys[i], 0, 0);
+        fitSpectrum(keys[i], 1, 0);
     }
 
     //set up fit line re-drawing
     dataStore.viewer.drawCallback = addFitLines;
-    //reset to first plot
-    document.getElementById(dataStore.GRIFFINdetectors[0]).onclick()
 }
 
 ///////////////////
@@ -250,8 +250,8 @@ function addFitLines(){
 
     //add fit lines
     lower = dataStore.viewer.addFitLine(
-                dataStore.ROI[dataStore.currentPlot].ROIlower[0], 
-                dataStore.ROI[dataStore.currentPlot].ROIlower[1] - dataStore.ROI[dataStore.currentPlot].ROIlower[0], 
+                dataStore.ROI[dataStore.currentPlot][0][0], 
+                dataStore.ROI[dataStore.currentPlot][0][1] - dataStore.ROI[dataStore.currentPlot][0][0], 
                 dataStore.fitResults[dataStore.currentPlot][0][0], 
                 dataStore.fitResults[dataStore.currentPlot][0][1], 
                 dataStore.fitResults[dataStore.currentPlot][0][2], 
@@ -260,12 +260,12 @@ function addFitLines(){
             );
 
     upper = dataStore.viewer.addFitLine(
-                dataStore.ROI[dataStore.currentPlot].ROIupper[0], 
-                dataStore.ROI[dataStore.currentPlot].ROIupper[1] - dataStore.ROI[dataStore.currentPlot].ROIupper[0], 
-                dataStore.fitResults[dataStore.currentPlot][1][0], 
-                dataStore.fitResults[dataStore.currentPlot][1][1], 
-                dataStore.fitResults[dataStore.currentPlot][1][2], 
-                dataStore.fitResults[dataStore.currentPlot][1][3], 
+                dataStore.ROI[dataStore.currentPlot][1][0], 
+                dataStore.ROI[dataStore.currentPlot][1][1] - dataStore.ROI[dataStore.currentPlot][1][0], 
+                dataStore.fitResults[dataStore.currentPlot][1][0],
+                dataStore.fitResults[dataStore.currentPlot][1][1],
+                dataStore.fitResults[dataStore.currentPlot][1][2],
+                dataStore.fitResults[dataStore.currentPlot][1][3],
                 dataStore.fitResults[dataStore.currentPlot][1][4]
             );
     dataStore.viewer.containerFit.addChild(lower)
@@ -274,71 +274,190 @@ function addFitLines(){
     dataStore.viewer.stage.update();
 }
 
-function fitSpectra(spectrum){
-    //redo the fits for the named spectrum.
+// function fitSpectrum(spectrum){
+//     //redo the fits for the named spectrum.
 
-    //identify regions of interest
-    guessPeaks(spectrum, dataStore.rawData[spectrum])
+//     //identify regions of interest
+//     guessPeaks(spectrum, dataStore.rawData[spectrum])
 
-    //set up fitting
-    dataStore.viewer.addData(spectrum, JSON.parse(JSON.stringify(dataStore.rawData[spectrum])) )
-    dataStore.currentPlot = spectrum;
-    dataStore.viewer.plotData() //kludge to update limits, could be nicer
-    dataStore.viewer.fitTarget = spectrum;
+//     //set up fitting
+//     dataStore.viewer.addData(spectrum, JSON.parse(JSON.stringify(dataStore.rawData[spectrum])) )
+//     dataStore.currentPlot = spectrum;
+//     dataStore.viewer.plotData() //kludge to update limits, could be nicer
+//     dataStore.viewer.fitTarget = spectrum;
 
-    //first peak
-    dataStore.currentPeak = 0
-    dataStore.viewer.FitLimitLower = dataStore.ROI[spectrum].ROIlower[0]
-    dataStore.viewer.FitLimitUpper = dataStore.ROI[spectrum].ROIlower[1]
-    dataStore.viewer.fitData(spectrum, 0);
+//     //first peak
+//     dataStore.currentPeak = 0
+//     dataStore.viewer.FitLimitLower = dataStore.ROI[spectrum].ROIlower[0]
+//     dataStore.viewer.FitLimitUpper = dataStore.ROI[spectrum].ROIlower[1]
+//     dataStore.viewer.fitData(spectrum, 0);
     
-    //second peak
-    dataStore.currentPeak = 1
-    dataStore.viewer.FitLimitLower = dataStore.ROI[spectrum].ROIupper[0]
-    dataStore.viewer.FitLimitUpper = dataStore.ROI[spectrum].ROIupper[1]
-    dataStore.viewer.fitData(spectrum, 0);
+//     //second peak
+//     dataStore.currentPeak = 1
+//     dataStore.viewer.FitLimitLower = dataStore.ROI[spectrum].ROIupper[0]
+//     dataStore.viewer.FitLimitUpper = dataStore.ROI[spectrum].ROIupper[1]
+//     dataStore.viewer.fitData(spectrum, 0);
     
-    //dump data so it doesn't stack up 
-    dataStore.viewer.removeData(spectrum);        
+//     //dump data so it doesn't stack up 
+//     dataStore.viewer.removeData(spectrum);        
 
-    updateTable(spectrum)
+//     updateTable(spectrum)
+
+// }
+
+// function fitCallback(center, width, amplitude, intercept, slope){
+//     //after fitting, log the fit results, as well as any modification made to the ROI by the fitting algortihm
+//     //also update table
+
+//     if(!dataStore.fitResults[dataStore.currentPlot])
+//         dataStore.fitResults[dataStore.currentPlot] = [];
+
+//     //keep track of fit results
+//     dataStore.fitResults[dataStore.currentPlot][dataStore.currentPeak] = [amplitude, center, width, intercept, slope]
+
+//     //convenient to arrange resolution data here
+//     if(dataStore.currentPeak == 0)
+//         dataStore.lowPeakResolution[dataStore.GRIFFINdetectors.indexOf(dataStore.currentPlot.slice(0,10))] = width;
+//     else if(dataStore.currentPeak == 1)
+//         dataStore.highPeakResolution[dataStore.GRIFFINdetectors.indexOf(dataStore.currentPlot.slice(0,10))] = width;
+
+//     if(dataStore.currentPeak == 0){
+//         dataStore.ROI[dataStore.currentPlot].ROIlower[0] = dataStore.viewer.FitLimitLower;
+//         dataStore.ROI[dataStore.currentPlot].ROIlower[1] = dataStore.viewer.FitLimitUpper;
+//     } else {
+//         dataStore.ROI[dataStore.currentPlot].ROIupper[0] = dataStore.viewer.FitLimitLower;
+//         dataStore.ROI[dataStore.currentPlot].ROIupper[1] = dataStore.viewer.FitLimitUpper;
+//     }
+
+//     //update table
+//     updateTable(dataStore.currentPlot);
+//     whatsNormal();
+//     highlightOutliers();
+
+//     //update plot
+//     dataStore.viewer.plotData();
+
+//     //update resolution plot
+//     reconstructResolutionData()
+// }
+
+function fitSpectrum(spectrum, peak, retries){
+    //redo the fits for the named spectrum; peak=0 -> low energy peak, peak=1 -> high energy peak
+
+    var fit = new fitter('scripts/fitWorker.js')
+    var lowerLimit, upperLimit;
+    var x,y,i;
+    var fixedLine;
+    var fitData, amplitude, center, width;
+
+    lowerLimit = dataStore.ROI[spectrum][peak][0];
+    upperLimit = dataStore.ROI[spectrum][peak][1];
+
+    //estimate straight bkg
+    x = []
+    y = []
+    for(i=lowerLimit-5; i<lowerLimit; i++){
+        x.push(i)
+        y.push(dataStore.rawData[spectrum][i]) 
+    }
+    for(i=upperLimit; i<upperLimit+5; i++){
+        x.push(i)
+        y.push(dataStore.rawData[spectrum][i]) 
+    }
+    fixedLine = simpleLine(x,y)
+
+    //guess at gaussian parameters
+    amplitude=1;
+
+    fitData = JSON.parse(JSON.stringify(dataStore.rawData[spectrum]));
+    fitData = fitData.slice(lowerLimit, upperLimit);
+    // Find maximum Y value in the fit data
+    if(Math.max.apply(Math, fitData)>amplitude){
+        amplitude = Math.max.apply(Math, fitData);
+    }
+    // Find the bin with the maximum Y value
+    center=0;
+    while(fitData[center] < amplitude){
+        center++;
+    }
+    width = this.estimateWidth(fitData, center, amplitude);
+    center += lowerLimit + 0.5;
+
+    fit.asyncFit(
+        dataStore.rawData[spectrum], 
+        lowerLimit, 
+        upperLimit, 
+        'gaussPlusLinear', 
+        fixedLine, 
+        [amplitude, center, width],  
+        gotFitResults.bind(null, spectrum, peak, retries, fixedLine[0], fixedLine[1])
+    );
 
 }
 
-function fitCallback(center, width, amplitude, intercept, slope){
-    //after fitting, log the fit results, as well as any modification made to the ROI by the fitting algortihm
-    //also update table
+function gotFitResults(spectrum, peak, retries, intercept, slope, fit){
+    //callback to run after getting fit results.
 
-    if(!dataStore.fitResults[dataStore.currentPlot])
-        dataStore.fitResults[dataStore.currentPlot] = [];
-
-    //keep track of fit results
-    dataStore.fitResults[dataStore.currentPlot][dataStore.currentPeak] = [amplitude, center, width, intercept, slope]
-
-    //convenient to arrange resolution data here
-    if(dataStore.currentPeak == 0)
-        dataStore.lowPeakResolution[dataStore.GRIFFINdetectors.indexOf(dataStore.currentPlot.slice(0,10))] = width;
-    else if(dataStore.currentPeak == 1)
-        dataStore.highPeakResolution[dataStore.GRIFFINdetectors.indexOf(dataStore.currentPlot.slice(0,10))] = width;
-
-    if(dataStore.currentPeak == 0){
-        dataStore.ROI[dataStore.currentPlot].ROIlower[0] = dataStore.viewer.FitLimitLower;
-        dataStore.ROI[dataStore.currentPlot].ROIlower[1] = dataStore.viewer.FitLimitUpper;
+    //check if the fit failed, and redo with slightly nudged fit limits
+    if( (!fit[0] || !fit[1] || !fit[2]) && retries<10){
+        dataStore.ROI[spectrum][peak][0]--;
+        dataStore.ROI[spectrum][peak][1]++;
+        fitSpectrum(spectrum, peak, retries+1);
     } else {
-        dataStore.ROI[dataStore.currentPlot].ROIupper[0] = dataStore.viewer.FitLimitLower;
-        dataStore.ROI[dataStore.currentPlot].ROIupper[1] = dataStore.viewer.FitLimitUpper;
+        //keep track of fit results
+        if(Array.isArray(dataStore.fitResults[spectrum])){
+            dataStore.fitResults[spectrum][peak] = [fit[0], fit[1], fit[2], intercept, slope];
+        } else{
+            dataStore.fitResults[spectrum] = [];
+            dataStore.fitResults[spectrum][peak] = [fit[0], fit[1], fit[2], intercept, slope];
+        }
+
+        //convenient to arrange resolution data here
+        if(peak == 0)
+            dataStore.lowPeakResolution[dataStore.GRIFFINdetectors.indexOf(spectrum.slice(0,10))] = fit[2];
+        else if(peak == 1)
+            dataStore.highPeakResolution[dataStore.GRIFFINdetectors.indexOf(spectrum.slice(0,10))] = fit[2];
+
+        //update table
+        updateTable(spectrum);
+        //whatsNormal();
+        //highlightOutliers();
+
+        //update resolution plot
+        reconstructResolutionData()
+    }
+}
+
+function simpleLine(x,y){
+    var i, X=0, Y=0, XY=0, X2=0,
+        slope, intercept;
+
+    for(i=0; i<x.length; i++){
+        X += x[i];
+        Y += y[i];
+        XY += x[i]*y[i];
+        X2 += x[i]*x[i];
     }
 
-    //update table
-    updateTable(dataStore.currentPlot);
-    whatsNormal();
-    highlightOutliers();
+    slope = (x.length*XY - X*Y) / (x.length*X2 - X*X);
+    intercept = (X2*Y - X*XY) / (x.length*X2 - X*X)
 
-    //update plot
-    dataStore.viewer.plotData();
+    return  [intercept, slope]
+}
 
-    //update resolution plot
-    reconstructResolutionData()
+function estimateWidth(spectrum, peakCenter, peakHeight){
+    var x, width;
+
+    x=peakCenter;
+    while(spectrum[x]>(peakHeight/2.0)) x--; 
+    width=x;
+    x=peakCenter;
+    while(spectrum[x]>(peakHeight/2.0)) x++; 
+    width=x-width;
+    if(width<1) width=1;
+    width/=2.35;
+
+    return width
 }
 
 function guessPeaks(spectrumName, data){
@@ -373,10 +492,15 @@ function guessPeaks(spectrumName, data){
         ROIupper = JSON.parse(JSON.stringify(buffer));
     }
 
-    dataStore.ROI[spectrumName] = {
-        "ROIlower": ROIlower,
-        "ROIupper": ROIupper
-    }
+    // dataStore.ROI[spectrumName] = {
+    //     "ROIlower": ROIlower,
+    //     "ROIupper": ROIupper
+    // }
+
+    dataStore.ROI[spectrumName] = [
+        ROIlower,
+        ROIupper
+    ]
 
 }
 
@@ -440,7 +564,7 @@ function reconstructResolutionData(){
     }
 
     dataStore.resolutionData = arrangePoints(detectorIndex, [dataStore.lowPeakResolution, dataStore.highPeakResolution], flags )
-    //console.log(dataStore.resolutionData)
+
     dataStore.dygraph.updateOptions( { 'file': dataStore.resolutionData } );
 }
 
@@ -568,11 +692,13 @@ function updateEnergies(){
 
     //fit all calibration peaks in all spectra
     for(i=0; i<keys.length; i++){
-        fitSpectra(keys[i]);
+        guessPeaks(keys[i], dataStore.rawData[keys[i]]);
+        fitSpectrum(keys[i], 0, 0);
+        fitSpectrum(keys[i], 1, 0);
     }
 
     //reset to first plot
-    document.getElementById(dataStore.GRIFFINdetectors[0]).onclick()
+    //document.getElementById(dataStore.GRIFFINdetectors[0]).onclick()
 }
 
 function customEnergy(){
@@ -585,7 +711,7 @@ function customEnergy(){
 
     //fit all calibration peaks in all spectra
     for(i=0; i<keys.length; i++){
-        fitSpectra(keys[i]);
+        fitSpectrum(keys[i]);
     }
 
     //reset to first plot

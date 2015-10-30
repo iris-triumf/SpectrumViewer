@@ -588,18 +588,7 @@ function spectrumViewer(canvasID){
 		while(fitdata[cent]<max){
 			cent++;
 		}
-
-		// Find the width of the peak
-		// x=cent;
-		// while(fitdata[x]>(max/2.0)) x--; 
-		// width=x;
-		// x=cent;
-		// while(fitdata[x]>(max/2.0)) x++; 
-		// width=x-width;
-		// if(width<1) width=1;
-		// width/=2.35;
 		width = this.estimateWidth(fitdata, cent, max);
-
 		cent=cent+this.FitLimitLower+0.5;
 
 		//prefit straight bkg

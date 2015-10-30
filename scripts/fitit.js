@@ -24,7 +24,7 @@ function histofit(){
 		var i, N=0;
 		for(i=1; i<=n; i++)
 			N += i;
-//console.log([n, lambda, N])
+
 		return n*Math.log(lambda) - lambda - N;
 	}
 
@@ -35,10 +35,10 @@ function histofit(){
 
 		for(i=0; i<this.x.length; i++){
 			lambda = this.fxn.bind(this, this.x[i], param)();
-//console.log(param)
+
 			nll -= this.logPoisson(this.y[i], lambda);
 		}
-//console.log(nll)
+
 		return nll;
 	}
 
@@ -86,6 +86,7 @@ function histofit(){
 
 	//converge a fit
 	this.fitit = function(){
+
 		var i, grad, NLL, newNLL,
 			dNLL = 1000,
 			tolerance = 0.0001,
@@ -101,7 +102,7 @@ function histofit(){
 			this.param[i] = this.guess[i];
 
 		while(Math.abs(dNLL) > tolerance && limit>0){
-//console.log(this.param)
+
 			NLL = this.NegLL(this.param);
 			grad = this.nllGrad(this.param);
 
@@ -109,7 +110,7 @@ function histofit(){
 			for(i=0; i<this.param.length; i++){
 				this.param[i] -= grad[i]*this.stepSize;
 			}
-//console.log(this.param)
+
 			newNLL = this.NegLL(this.param);
 
 			//take smaller steps as we approach minimum

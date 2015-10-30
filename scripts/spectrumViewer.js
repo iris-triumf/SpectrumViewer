@@ -210,7 +210,7 @@ function toggleData(){
     }
 
     //toggle indicator
-    document.getElementById('badge'+id).classList.toggle('hidden')
+    document.getElementById('badge'+this.id).classList.toggle('hidden')
 }
 
 function deleteAllPlots(){
