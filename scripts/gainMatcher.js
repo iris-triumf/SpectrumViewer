@@ -11,10 +11,10 @@ function setupDataStore(){
     dataStore.allClear = 0;                                                 //counter to track when all templates are loaded
     dataStore.pageTitle = 'Gain Matcher';                                   //header title
     //network and raw data
-    dataStore.spectrumServer = 'http://grsmid00.triumf.ca:9093/';           //host + port of analyzer server
-    dataStore.ODBhost = 'http://grsmid00.triumf.ca:8081/';                  //MIDAS / ODB host + port
+    dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';           //host + port of analyzer server
+    dataStore.ODBhost = 'http://iris00.triumf.ca:8081/';                  //MIDAS / ODB host + port
     dataStore.ODBrequests = [                                               //request strings for odb parameters
-        'http://grsmid00.triumf.ca:8081/?cmd=jcopy&odb0=/DAQ/MSC/chan&odb1=/DAQ/MSC/gain&odb2=/DAQ/MSC/offset&encoding=json-p-nokeys&callback=updateODB'
+        'http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/DAQ/MSC/chan&odb1=/DAQ/MSC/gain&odb2=/DAQ/MSC/offset&encoding=json-p-nokeys&callback=updateODB'
     ];
     dataStore.rawData = {};                                                 //buffer for raw spectrum data
     //fitting
@@ -126,7 +126,7 @@ function setupDataStore(){
             'GRG16RN00A',
             'GRG16WN00A'
         ];
-    dataStore.DAQquery = 'http://grsmid00.triumf.ca:8081/?cmd=jcopy&odb0=/DAQ/MSC/chan&encoding=json-p-nokeys&callback=loadData';
+    dataStore.DAQquery = 'http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/DAQ/MSC/chan&encoding=json-p-nokeys&callback=loadData';
 
 
     //generate groups for plot selector

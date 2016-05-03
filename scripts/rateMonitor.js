@@ -19,8 +19,8 @@ function setupDataStore(){
     dataStore.rateData = [[new Date(),0,0,0,0,0,0,0,0]];                //dummy data to seed rate data collection
     dataStore.annotations = {};                                         //annotations queued up to add to the next dygraph point
     dataStore.targetSpectrum = 'SUM_Singles_Energy';                    //analyzer key for spectrum to examine
-    dataStore.spectrumServer = 'http://grsmid00.triumf.ca:9093/';       //host and port of analyzer
-    dataStore.ODBrequests = ['http://grsmid00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/Epics/Variables/MSRD&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
+    dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';       //host and port of analyzer
+    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/Epics/Variables/MSRD&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
     dataStore.scalars = {                                               //key:value pairs for scalrs to pull from odb
             'PC': 0,
             'LF1': 0,
