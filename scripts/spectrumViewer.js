@@ -164,7 +164,7 @@ function setupDataStore(){
                     "id": "IC",
                     "items": [
 						'IRIS_IC',
-						'test'
+						'TEST'
 					]
                 },
         	]
