@@ -154,17 +154,32 @@ function setupDataStore(){
             ]
         },
 
-        {
-            "name": "IRIS",
-            "id": "IRIS",
+		{
+            "name": "IC/SSB",
+            "id": "IC/SSB",
             "color": '#367FA9',
             "subGroups": [
                 {
-                    "subname": "IC",
-                    "id": "IC",
+                    "subname": "Energy",
+                    "id": "ICEnergy",
                     "items": [
-						'IRIS_IC',
-						'TEST'
+						'IC_Energy',
+						'SSB_Energy'
+					]
+                },
+        	]
+        }
+
+        {
+            "name": "YY1",
+            "id": "YY1",
+            "color": '#367FA9',
+            "subGroups": [
+                {
+                    "subname": "Energy",
+                    "id": "YY1Energy",
+                    "items": [
+						'YY1_Energy',
 					]
                 },
         	]
