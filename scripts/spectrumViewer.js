@@ -156,7 +156,7 @@ function setupDataStore(){
 
 		{
             "name": "IC/SSB",
-            "id": "IC/SSB",
+            "id": "IC-SSB",
             "color": '#367FA9',
             "subGroups": [
                 {
@@ -168,7 +168,7 @@ function setupDataStore(){
 					]
                 },
         	]
-        }
+        },
 
         {
             "name": "YY1",
@@ -179,7 +179,7 @@ function setupDataStore(){
                     "subname": "Energy",
                     "id": "YY1Energy",
                     "items": [
-						'YY1_Energy',
+						'YY1_Energy'
 					]
                 },
         	]
