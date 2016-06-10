@@ -175,11 +175,19 @@ function setupDataStore(){
             "id": "YY1",
             "color": '#367FA9',
             "subGroups": [
-                {
+				{
                     "subname": "Energy",
                     "id": "YY1Energy",
                     "items": [
 						'YY1_Energy'
+					]
+                },
+
+                {
+                    "subname": "HitPattern",
+                    "id": "YY1Hits",
+                    "items": [
+						'YY1_Hits'
 					]
                 },
         	]
