@@ -10,7 +10,7 @@ function setupDataStore(){
     dataStore.pageTitle = 'Rate Monitor'                                //header title
     dataStore.allClear = 0;                                             //counter to track when all templates are loaded
     dataStore.doUpdates = true;                                         //include update loop
-    dataStore.plots = ['SUM_Singles_Energy'];                           //names of plotGrid cells and spectrumViewer objects
+    dataStore.plots = ['IC_Energy'];                           //names of plotGrid cells and spectrumViewer objects
     dataStore.newCellListeners = ['plotControl'];
     dataStore.attachCellListeners = ['plotControl'];                    //ids to dispatch attachCell events to
     dataStore.dygraphListeners = ['rates'];                             //ids to dispatch all dygraph events to
@@ -18,7 +18,7 @@ function setupDataStore(){
     dataStore.manualBKG = {};                                           //string encodings of manual background ranges: 'a-b;c;d-e' indicates all bins on [a,b], plus c, plus [d,e]
     dataStore.rateData = [[new Date(),0,0,0,0,0,0,0,0]];                //dummy data to seed rate data collection
     dataStore.annotations = {};                                         //annotations queued up to add to the next dygraph point
-    dataStore.targetSpectrum = 'SUM_Singles_Energy';                    //analyzer key for spectrum to examine
+    dataStore.targetSpectrum = 'IC_Energy';                    //analyzer key for spectrum to examine
     dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';       //host and port of analyzer
     dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/Epics/Variables/MSRD&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
     dataStore.scalars = {                                               //key:value pairs for scalrs to pull from odb
