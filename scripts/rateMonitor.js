@@ -20,7 +20,7 @@ function setupDataStore(){
     dataStore.annotations = {};                                         //annotations queued up to add to the next dygraph point
     dataStore.targetSpectrum = 'IC_Energy';                    //analyzer key for spectrum to examine
     dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';       //host and port of analyzer
-    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/Epics/Variables/MSRD&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
+    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/AdcScaler/Variables/SCAR&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
     dataStore.scalars = {                                               //key:value pairs for scalrs to pull from odb
             'PC': 0,
             'LF1': 0,
@@ -82,8 +82,8 @@ function setupDataStore(){
                 'lvlID': 'PC'                                       //key corresponding to dataStore.scalars
             },
             {
-                'title': 'Laser Freq. 1',
-                'lvlID': 'LF1'
+                'title': 'ADC rate',
+                'lvlID': 'ADC'
             },
             {
                 'title': 'Laser Freq. 2',
@@ -161,9 +161,9 @@ function parseScalars(scalars){
         dataStore.oldRun = dataStore.scalars.run
 
     dataStore.scalars = {
-        'PC': scalars[0].MSRD[39],
-        'LF1': scalars[0].MSRD[29],
-        'LF2': scalars[0].MSRD[30],
+        'PC': scalars[0].SCAR[0],
+        'ADC': scalars[0].SCAR[1],
+        'LF2': scalars[0].SCAR[2],
         'run': scalars[1]['Run number']
     }
 }

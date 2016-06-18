@@ -4,26 +4,35 @@
 
 function setupDataStore(){
     var i,j
-    var griffinQuads = ['B', 'G', 'R', 'W'];
-    var griffinCodes = []
-    var sceptarCodes = []
-    var descantCodes = []
+    var YdCodes = []
+    var YuCodes = []
+    var Sd1Codes = []
+    var Sd2Codes = []
+    var SuCodes = []
+    var CsICodes = []
+    var ICCodes = []
 
-    //generate GRIFFFIN detector nomenclature codes
-    for(i=1; i<17; i++){
-        for(j=0; j<griffinQuads.length; j++){
-            griffinCodes.push('GRG' + alwaysThisLong(i,2) + griffinQuads[j] + 'N00A');
-        }
+    //generate detector nomenclature codes
+	for(i=0; i<32; i++){
+		ICCodes.push('ICCh' + alwaysThisLong(i,2));
     }
-
-    //generate SCEPTAR detector nomenclature codes
-    for(i=1; i<21; i++){
-        sceptarCodes.push('SEP' + alwaysThisLong(i,2) + 'XN00X');
+	for(i=0; i<128; i++){
+		YuCodes.push('YuCh' + alwaysThisLong(i,3));
     }
-
-    //generate DESCANT detector nomenclature codes
-    for(i=1; i<71; i++){
-        descantCodes.push('DSC' + alwaysThisLong(i,2) + 'XN00X');
+	for(i=0; i<128; i++){
+		YdCodes.push('YdCh' + alwaysThisLong(i,3));
+    }
+	for(i=0; i<64; i++){
+		Sd1Codes.push('Sd1Ch' + alwaysThisLong(i,2));
+    }
+	for(i=0; i<64; i++){
+		Sd2Codes.push('Sd2Ch' + alwaysThisLong(i,2));
+    }
+	for(i=0; i<64; i++){
+		SuCodes.push('Sd1Ch' + alwaysThisLong(i,2));
+    }
+	for(i=0; i<32; i++){
+		CsICodes.push('CsICh' + alwaysThisLong(i,2));
     }
 
     //declare top level groups
@@ -54,118 +63,44 @@ function setupDataStore(){
                 }
             ]
         },
-
-        {
-            "name": "GRIFFIN",
-            "id": "GRIFFIN",
-            "color": '#367FA9',
-            "subGroups": [
-                {
-                    "subname": "Energy",
-                    "id": "GRGenergy",
-                    "items": griffinCodes.map(function(c){return c + '_Energy'})
-                },
-                {
-                    "subname": "Time",
-                    "id": "GRGtime",
-                    "items": griffinCodes.map(function(c){return c + '_Time'})
-                },
-                {
-                    "subname": "Pulse Height",
-                    "id": "GRGpulseHeight",
-                    "items": griffinCodes.map(function(c){return c + '_Pulse_Height'})
-                },
-                {
-                    "subname": "Waveform",
-                    "id": "GRGwaveform",
-                    "items": griffinCodes.map(function(c){return c + '_Waveform'})
-                }
-            ]
-        },
-
-        {
-            "name": "SCEPTAR",
-            "id": "SCEPTAR",
-            "color": '#367FA9',
-            "subGroups": [
-                {
-                    "subname": "Energy",
-                    "id": "SEPenergy",
-                    "items": sceptarCodes.map(function(c){return c + '_Energy'})
-                },
-                {
-                    "subname": "Time",
-                    "id": "SEPtime",
-                    "items": sceptarCodes.map(function(c){return c + '_Time'})
-                },
-                {
-                    "subname": "Pulse Height",
-                    "id": "SEPpulseHeight",
-                    "items": sceptarCodes.map(function(c){return c + '_Pulse_Height'})
-                },
-                {
-                    "subname": "Waveform",
-                    "id": "SEPwaveform",
-                    "items": sceptarCodes.map(function(c){return c + '_Waveform'})
-                }
-            ]
-        },
 		
 		{
-            "name": "DESCANT",
-            "id": "DESCANT",
-            "color": '#367FA9',
-            "subGroups": [
-                {
-                    "subname": "Energy",
-                    "id": "DSCenergy",
-                    "items": descantCodes.map(function(c){return c + '_Energy'})
-                },
-                {
-                    "subname": "Time",
-                    "id": "DSCtime",
-                    "items": descantCodes.map(function(c){return c + '_Time'})
-                },
-                {
-                    "subname": "Pulse Height",
-                    "id": "DSCpulseHeight",
-                    "items": descantCodes.map(function(c){return c + '_Pulse_Height'})
-                },
-                {
-                    "subname": "Waveform",
-                    "id": "DSCwaveform",
-                    "items": descantCodes.map(function(c){return c + '_Waveform'})
-                },
-                {
-                    "subname": "Zero Crossing",
-                    "id": "DSCzero",
-                    "items": descantCodes.map(function(c){return c + '_Zero_Crossing'})
-                },
-                {
-                    "subname": "Long Integration",
-                    "id": "DSClongInt",
-                    "items": descantCodes.map(function(c){return c + '_Long_Integration'})
-                },
-                {
-                    "subname": "Short Integration",
-                    "id": "DSCshortInt",
-                    "items": descantCodes.map(function(c){return c + '_Short_Integration'})
-                }
-            ]
-        },
-
-		{
-            "name": "IC/SSB",
+            "name": "Overview",
             "id": "IC-SSB",
             "color": '#367FA9',
             "subGroups": [
                 {
                     "subname": "Energy",
-                    "id": "ICEnergy",
+                    "id": "IC_E",
                     "items": [
-						'IC_Energy',
-						'SSB_Energy'
+						'ICEnergy',
+						'YdEnergy',
+						'CsI1Energy',
+						'CsI2Energy',
+						'Sd1rEnergy',
+						'Sd1sEnergy',
+						'Sd2rEnergy',
+						'Sd2sEnergy',
+						'SSBEnergy'
 					]
+                },
+        	]
+        },
+
+        {
+            "name": "IC",
+            "id": "IC",
+            "color": '#367FA9',
+            "subGroups": [
+				{
+                    "subname": "ADC spectra",
+                    "id": "IC_P",
+                    "items": ICCodes.map(function(c){return c + 'ADC'})
+                },
+				{
+                    "subname": "Energy",
+                    "id": "IC_E",
+                    "items": ICCodes.map(function(c){return c + 'Energy'})
                 },
         	]
         },
@@ -176,19 +111,104 @@ function setupDataStore(){
             "color": '#367FA9',
             "subGroups": [
 				{
-                    "subname": "Energy",
-                    "id": "YY1Energy",
-                    "items": [
-						'YY1_Energy'
-					]
+                    "subname": "ADC spectra",
+                    "id": "YY1_P",
+                    "items": YdCodes.map(function(c){return c + 'ADC'})
                 },
+				{
+                    "subname": "Energy",
+                    "id": "YY1_E",
+                    "items": YdCodes.map(function(c){return c + 'Energy'})
+                },
+        	]
+        },
 
-                {
-                    "subname": "HitPattern",
-                    "id": "YY1Hits",
-                    "items": [
-						'YY1_Hits'
-					]
+        {
+            "name": "CsI",
+            "id": "CsI",
+            "color": '#367FA9',
+            "subGroups": [
+				{
+                    "subname": "ADC spectra",
+                    "id": "CsI_P",
+                    "items": CsICodes.map(function(c){return c + 'ADC'})
+                },
+				{
+                    "subname": "Energy",
+                    "id": "CsI_E",
+                    "items": CsICodes.map(function(c){return c + 'Energy'})
+                },
+        	]
+        },
+
+        {
+            "name": "S3-1",
+            "id": "S3-1",
+            "color": '#367FA9',
+            "subGroups": [
+				{
+                    "subname": "ADC spectra",
+                    "id": "S3-1_P",
+                    "items": Sd1Codes.map(function(c){return c + 'ADC'})
+                },
+				{
+                    "subname": "Energy",
+                    "id": "S3-1_E",
+                    "items": Sd1Codes.map(function(c){return c + 'Energy'})
+                },
+        	]
+        },
+
+        {
+            "name": "S3-2",
+            "id": "S3-2",
+            "color": '#367FA9',
+            "subGroups": [
+				{
+                    "subname": "ADC spectra",
+                    "id": "S3-2_P",
+                    "items": Sd2Codes.map(function(c){return c + 'ADC'})
+                },
+				{
+                    "subname": "Energy",
+                    "id": "S3-2_E",
+                    "items": Sd2Codes.map(function(c){return c + 'Energy'})
+                },
+        	]
+        },
+
+        {
+            "name": "YY1-upstream",
+            "id": "YU",
+            "color": '#367FA9',
+            "subGroups": [
+				{
+                    "subname": "ADC spectra",
+                    "id": "YU_P",
+                    "items": YuCodes.map(function(c){return c + 'ADC'})
+                },
+				{
+                    "subname": "Energy",
+                    "id": "YU_E",
+                    "items": YuCodes.map(function(c){return c + 'Energy'})
+                },
+        	]
+        },
+
+        {
+            "name": "S3-upstream",
+            "id": "S3-u",
+            "color": '#367FA9',
+            "subGroups": [
+				{
+                    "subname": "ADC spectra",
+                    "id": "S3-u_P",
+                    "items": SuCodes.map(function(c){return c + 'ADC'})
+                },
+				{
+                    "subname": "Energy",
+                    "id": "S3-u_E",
+                    "items": SuCodes.map(function(c){return c + 'Energy'})
                 },
         	]
         }

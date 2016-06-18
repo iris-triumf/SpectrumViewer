@@ -31,7 +31,7 @@ function spectrumViewer(canvasID){
 	this.yAxisPixLength = this.canvas.height - this.topMargin - this.bottomMargin; //px
 	this.binWidth = 0; //px
 	this.XaxisLimitMin = 0; //default min channel to show on x-axis
-	this.XaxisLimitMax = 2048; //default max channel to show on x-axis
+	this.XaxisLimitMax = 4096; //default max channel to show on x-axis
 	this.YaxisLimitMin = 0; //default min counts to show on y-axis
 	this.YaxisLimitMax = 500; //default max counts to show on y-axis
 	this.XaxisLimitAbsMax = 2048; //highest maximum allowed on the x-axis
