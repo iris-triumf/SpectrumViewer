@@ -403,6 +403,7 @@ span.title{
 .dd-item{
     padding: 0.25em;
     color: #000000;
+    white-space: nowrap;
 }
 
 .dd-item:hover{
@@ -413,4 +414,10 @@ span.title{
 .dd-limited{
     max-height: 400px;
     overflow: auto;
+}
+
+/*2d spectra*/
+button.delete-vertex, button.move-vertex-up, button.move-vertex-down{
+    position: relative;
+    top:-1px;
 }
