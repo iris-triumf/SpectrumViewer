@@ -8,13 +8,17 @@ function setupDataStore(){
     var i, groups = [];
 
     dataStore = {}
-    dataStore.allClear = 0;                                                 //counter to track when all templates are loaded
-    dataStore.pageTitle = 'Gain Matcher';                                   //header title
+
     //network and raw data
     dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';           //host + port of analyzer server
     dataStore.ODBhost = 'http://iris00.triumf.ca:8081/';                  //MIDAS / ODB host + port
+
+    // shouldn't need to change anything below this line -----------------------------------------------------------------------
+
+    dataStore.pageTitle = 'Gain Matcher';                                   //header title
+    dataStore.DAQquery = dataStore.ODBhost + '?cmd=jcopy&odb0=/DAQ/MSC/chan&encoding=json-p-nokeys&callback=loadData';
     dataStore.ODBrequests = [                                               //request strings for odb parameters
-        'http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/DAQ/MSC/chan&odb1=/DAQ/MSC/gain&odb2=/DAQ/MSC/offset&encoding=json-p-nokeys&callback=updateODB'
+    dataStore.ODBhost + '?cmd=jcopy&odb0=/DAQ/MSC/chan&odb1=/DAQ/MSC/gain&odb2=/DAQ/MSC/offset&encoding=json-p-nokeys&callback=updateODB'
     ];
     dataStore.rawData = {};                                                 //buffer for raw spectrum data
     //fitting
@@ -22,10 +26,6 @@ function setupDataStore(){
     dataStore.fitResults = {};                                              //fit results: 'plotname': [[amplitude, center, width, intercept, slope], [amplitude, center, width, intercept, slope]]            
     //custom element config
     dataStore.plots = ['Spectra'];                                          //names of plotGrid cells and spectrumViewer objects
-    dataStore.attachCellListeners = ['plotControl'];                        //ids to dispatch attachCell events to
-    dataStore.newCellListeners = ['plotControl'];
-    dataStore.fitAllCompleteListeners = ['plotList'];                       //ids to dispatch fitAllComplete events to
-    dataStore.dygraphUpdateListeners = ['resolution'];                      //ids to dispatch dygraphUpdate events to
     //resolution plot
     dataStore.plotStyle = {                                                 //dygraphs style object
         labels: ['channel', 'Low Energy Peak', 'High Energy Peak'],
@@ -59,6 +59,7 @@ function setupDataStore(){
     dataStore.lowPeakResolution.fill(0,64);                             //start with zeroes
     dataStore.highPeakResolution = [];                                  //as lowPeakResolution
     dataStore.highPeakResolution.fill(0,64);                            //start with zeroes
+    dataStore.searchRegion = []                                         //[x_start, x_finish, y for peak search bar]
 
     dataStore.GRIFFINdetectors = [                                      //10-char codes of all possible griffin detectors.
             'GRG01BN00A',
@@ -126,7 +127,10 @@ function setupDataStore(){
             'GRG16RN00A',
             'GRG16WN00A'
         ];
+<<<<<<< HEAD
     dataStore.DAQquery = 'http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/DAQ/MSC/chan&encoding=json-p-nokeys&callback=loadData';
+=======
+>>>>>>> upstream/gh-pages
 
 
     //generate groups for plot selector
@@ -161,8 +165,12 @@ function setupDataStore(){
 setupDataStore();
 
 function fetchCallback(){
+    // change messages
     deleteNode('waitMessage');
-    //document.getElementById('gainMatcher').configure();
+    document.getElementById('regionMessage').classList.remove('hidden');
+
+    //show first plot
+    dataStore._plotListLite.snapToTop();
 }
 
 function loadData(DAQ){
@@ -188,14 +196,18 @@ function updateODB(obj){
     var channel = obj[0].chan,
         gain = obj[1].gain,
         offset = obj[2].offset,
-        i, position, urls = [];
+        i, g, o, position, urls = [];
 
     //for every griffin channel, update the gains and offsets:
     for(i=0; i<channel.length; i++){
         position = dataStore.GRIFFINdetectors.indexOf(channel[i]);
-        if(position != -1){
-            gain[i] = dataStore.fitResults[dataStore.GRIFFINdetectors[position]+'_Pulse_Height'][2][1];
-            offset[i] = dataStore.fitResults[dataStore.GRIFFINdetectors[position]+'_Pulse_Height'][2][0];
+        if( (position != -1) && (document.getElementById(channel[i]+'write').checked)){
+            g = dataStore.fitResults[dataStore.GRIFFINdetectors[position]+'_Pulse_Height'][2][1];
+            g = isNumeric(g) ? g : 1;
+            gain[i] = g;
+            o = dataStore.fitResults[dataStore.GRIFFINdetectors[position]+'_Pulse_Height'][2][0];
+            o = isNumeric(o) ? o : 0;
+            offset[i] = o;
         }
     }
 
@@ -219,3 +231,32 @@ function updateODB(obj){
     //get rid of the modal
     document.getElementById('dismissODBmodal').click();
 }
+<<<<<<< HEAD
+=======
+
+function shiftclick(clickCoords){
+    // callback for shift-click on plot - draw a horizontal line as the peak search region.
+    // this == spectrumViewer object
+
+    var buffer
+
+    if(dataStore.searchRegion.length == 0){
+        dataStore.searchRegion[0] = clickCoords.x;
+        dataStore.searchRegion[2] = clickCoords.y;
+    } else if (dataStore.searchRegion.length == 3){
+        dataStore.searchRegion[1] = clickCoords.x;
+        if(dataStore.searchRegion[0] > dataStore.searchRegion[1]){
+            buffer = dataStore.searchRegion[0];
+            dataStore.searchRegion[0] = dataStore.searchRegion[1];
+            dataStore.searchRegion[1] = buffer;
+        }
+        this.addLine('searchRegion', dataStore.searchRegion[0], dataStore.searchRegion[2], dataStore.searchRegion[1], dataStore.searchRegion[2], '#00FFFF');
+        this.plotData();
+
+        //user guidance
+        deleteNode('regionMessage');
+        document.getElementById('pickerMessage').classList.remove('hidden');
+        document.getElementById('fitAll').classList.remove('disabled');
+    }
+}
+>>>>>>> upstream/gh-pages
