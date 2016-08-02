@@ -46,11 +46,13 @@ function setupDataStore(){
                     "subname": "Hit Patterns",
                     "id": "hits",
                     "items": [
-                        'HITPATTERN_Energy',
-                        'HITPATTERN_Time',
-                        'HITPATTERN_Waveform',
-                        'HITPATTERN_Pulse_Height',
-                        'HITPATTERN_Rate'
+                        'YdHits',
+                        'CsI1Hits',
+                        'CsI2Hits',
+                        'Sd1rHits',
+                        'Sd1sHits',
+                        'Sd2rHits',
+                        'Sd2sHits'
                     ]
                 },
                 {

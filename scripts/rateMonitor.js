@@ -7,37 +7,25 @@ function setupDataStore(){
     var i, labels = ['time']
 
     dataStore = {};
-    dataStore.plots = ['SUM_Singles_Energy'];                           //what plot will we be focusing on?
+    dataStore.plots = ['ICCh15ADC'];                           //names of plotGrid cells and spectrumViewer objects
+    //dataStore.plots = ['SUM_Singles_Energy'];                           //what plot will we be focusing on?
     dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';       //host and port of analyzer
-    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/AdcScaler/Variables/SCAR&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
+    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/AdcScaler/Variables/SCAR&odb1=/Equipment/TdcScaler/Variables/SCTR&odb2=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
 
     //you probably don't need to change anything below this line----------------------------------------------------
 
     dataStore.pageTitle = 'Rate Monitor'                                //header title
     dataStore.allClear = 0;                                             //counter to track when all templates are loaded
     dataStore.doUpdates = true;                                         //include update loop
-// <<<<<<< HEAD
-//     dataStore.plots = ['IC_Energy'];                           //names of plotGrid cells and spectrumViewer objects
-//     dataStore.newCellListeners = ['plotControl'];
-//     dataStore.attachCellListeners = ['plotControl'];                    //ids to dispatch attachCell events to
-//     dataStore.dygraphListeners = ['rates'];                             //ids to dispatch all dygraph events to
-// 
-//     dataStore.manualBKG = {};                                           //string encodings of manual background ranges: 'a-b;c;d-e' indicates all bins on [a,b], plus c, plus [d,e]
-//     dataStore.rateData = [[new Date(),0,0,0,0,0,0,0,0]];                //dummy data to seed rate data collection
-//     dataStore.annotations = {};                                         //annotations queued up to add to the next dygraph point
-//     dataStore.targetSpectrum = 'IC_Energy';                    //analyzer key for spectrum to examine
-//     dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';       //host and port of analyzer
-//     dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/AdcScaler/Variables/SCAR&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
-// =======
     dataStore.manualBKG = {};                                           //string encodings of manual background ranges: 'a-b;c;d-e' indicates all bins on [a,b], plus c, plus [d,e]
     dataStore.rateData = [[new Date(),0,0,0,0,0,0,0,0]];                //dummy data to seed rate data collection
     dataStore.annotations = {};                                         //annotations queued up to add to the next dygraph point
     dataStore.targetSpectrum = dataStore.plots[0];                      //analyzer key for spectrum to examine
-//>>>>>>> upstream/gh-pages
     dataStore.scalars = {                                               //key:value pairs for scalrs to pull from odb
-            'PC': 0,
-            'LF1': 0,
-            'LF2': 0
+            'ADC': 0,
+            'TDC': 0,
+            'ratio1': 0,
+            'ratio2': 0
         }
     dataStore.currentSpectrum = [];                                     //latest polled spectrum, after background subtraction
     dataStore.oldSpectrum = [];                                         //previous bkg-subtracted spectrum
@@ -59,49 +47,54 @@ function setupDataStore(){
         'gammas':[                                                  //default parameters for gamma gates
             {
                 'title': 'Gate 1',                                  //human readable name
-                'min': 497,                                         //default minimum bin
-                'max': 504,                                         //default maximum bin
+                'min': 0,                                         //default minimum bin
+                'max': 4096,                                         //default maximum bin
                 'onByDefault': true                                 //displayed by default?
             },
             {
                 'title': 'Gate 2',
-                'min': 197,
-                'max': 204,
-                'onByDefault': true
+                'min': 0,
+                'max': 0,
+                'onByDefault': false
             },
             {
                 'title': 'Gate 3',
                 'min': 0,
                 'max': 0,
                 'onByDefault': false
-            },
-            {
-                'title': 'Gate 4',
-                'min': 0,
-                'max': 0,
-                'onByDefault': false
-            },
-            {
-                'title': 'Gate 5',
-                'min': 0,
-                'max': 0,
-                'onByDefault': false
-            }  
+            }//,
+         //   {
+         //       'title': 'Gate 4',
+         //       'min': 0,
+         //       'max': 0,
+         //       'onByDefault': false
+         //   },
+         //   {
+         //       'title': 'Gate 5',
+         //       'min': 0,
+         //       'max': 0,
+         //       'onByDefault': false
+         //   }  
         ],
 
         'levels':[
-            {
-                'title': 'Proton Current',                          //human readable name
-                'lvlID': 'PC'                                       //key corresponding to dataStore.scalars
-            },
-            {
-                'title': 'ADC rate',
+         	{
+                'title': 'ADCTrig rate',
                 'lvlID': 'ADC'
             },
-            {
-                'title': 'Laser Freq. 2',
-                'lvlID': 'LF2'
+			{
+                'title': 'TDCTrig rate',
+                'lvlID': 'TDC'
+            },
+			{
+                'title': 'Trigger/IC total',
+                'lvlID': 'ratio1'
+            },
+			{
+                'title': 'IC Ratio',
+                'lvlID': 'ratio2'
             }
+
         ]
     }
 
@@ -174,9 +167,10 @@ function parseScalars(scalars){
         dataStore.oldRun = dataStore.scalars.run
 
     dataStore.scalars = {
-        'PC': scalars[0].SCAR[0],
         'ADC': scalars[0].SCAR[1],
-        'LF2': scalars[0].SCAR[2],
-        'run': scalars[1]['Run number']
+        'TDC': scalars[1].SCTR[1],
+        'ratio1': scalars[0].SCAR[1]/dataStore.rateData[dataStore.rateData.length - 1][1],
+        'ratio2': dataStore.rateData[dataStore.rateData.length - 1][3]/dataStore.rateData[dataStore.rateData.length - 1][2], //scalars[1].SCTR[1],
+        'run': scalars[2]['Run number']
     }
 }

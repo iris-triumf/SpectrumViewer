@@ -2,15 +2,29 @@ function setupDataStore(){
     //declare top level groups
     var topGroups = [
         {
-            "name": "Annikal",
-            "id": "annikal",
+            "name": "dE-E PID",
+            "id": "pid",
             "color": '#367FA9',
             "subGroups": [
                 {
-                    "subname": "Energy",
+                    "subname": "test",
+                    "id": "test",
+                    "items": [
+                       '2D-Sd2rHits'
+                   ]
+                },
+				{
+                    "subname": "YY vs CsI",
                     "id": "energy",
                     "items": [
-                       '2D_dE_vs_E'
+                       'dE_vs_E'
+                   ]
+                },
+				{
+                    "subname": "S3 vs S3",
+                    "id": "energy",
+                    "items": [
+                       'dE_vs_E'
                    ]
                 }
             ]
@@ -20,8 +34,8 @@ function setupDataStore(){
     dataStore = {
         "topGroups": topGroups,                                     //groups in top nav row
         "cutVertices": [],                                          //[x,y] vertices of cut region polygon
-        "ODBhost": 'http://annikal.triumf.ca:8081',                 //host:port of ODB to write cut region vertices to
-        "spectrumServer": 'http://annikal.triumf.ca:9093',          //host:port to pull raw spectra from
+        "ODBhost": 'http://iris00.triumf.ca:8081',                 //host:port of ODB to write cut region vertices to
+        "spectrumServer": 'http://iris00.triumf.ca:9094',          //host:port to pull raw spectra from
         "raw": [0],
         "closeMenuOnclick": true,                                   //don't keep the plot menu open onclick (can only plot one at a time anyway)
         "pageTitle": '2D Spectrum Viewer'
