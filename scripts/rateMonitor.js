@@ -10,7 +10,7 @@ function setupDataStore(){
     dataStore.plots = ['ICCh15ADC'];                           //names of plotGrid cells and spectrumViewer objects
     //dataStore.plots = ['SUM_Singles_Energy'];                           //what plot will we be focusing on?
     dataStore.spectrumServer = 'http://iris00.triumf.ca:9094/';       //host and port of analyzer
-    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/AdcScaler/Variables/SCAR&odb1=/Equipment/TdcScaler/Variables/SCTR&odb2=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
+    dataStore.ODBrequests = ['http://iris00.triumf.ca:8081/?cmd=jcopy&odb0=/Equipment/AdcScaler/Variables/SCAR&odb1=/Runinfo/Run number&encoding=json-p-nokeys&callback=parseScalars'];  //odb requests to make every update
 
     //you probably don't need to change anything below this line----------------------------------------------------
 
@@ -22,10 +22,14 @@ function setupDataStore(){
     dataStore.annotations = {};                                         //annotations queued up to add to the next dygraph point
     dataStore.targetSpectrum = dataStore.plots[0];                      //analyzer key for spectrum to examine
     dataStore.scalars = {                                               //key:value pairs for scalrs to pull from odb
-            'ADC': 0,
-            'TDC': 0,
-            'ratio1': 0,
-            'ratio2': 0
+            'accepted': 0,
+            'ssb': 0,
+            'clock': 0,
+            'scint': 0,
+            'ic': 0,
+            'free': 0,
+            'sclr_ratio': 0,
+            'ic_ratio': 0
         }
     dataStore.currentSpectrum = [];                                     //latest polled spectrum, after background subtraction
     dataStore.oldSpectrum = [];                                         //previous bkg-subtracted spectrum
@@ -79,15 +83,31 @@ function setupDataStore(){
 
         'levels':[
          	{
-                'title': 'ADCTrig rate',
-                'lvlID': 'ADC'
+                'title': 'Accepted Trigger',
+                'lvlID': 'accepted'
             },
 			{
-                'title': 'TDCTrig rate',
-                'lvlID': 'TDC'
+                'title': 'SSB',
+                'lvlID': 'ssb'
             },
 			{
-                'title': 'Trigger/IC total',
+                'title': '1KHz Clock',
+                'lvlID': 'clock'
+            },
+			{
+                'title': 'Scintillator',
+                'lvlID': 'scint'
+            },			
+			{
+                'title': 'IC',
+                'lvlID': 'ic'
+            },
+			{
+                'title': 'Free Trigger',
+                'lvlID': 'free'
+            },
+			{
+                'title': 'Scint/IC',
                 'lvlID': 'ratio1'
             },
 			{
@@ -167,10 +187,14 @@ function parseScalars(scalars){
         dataStore.oldRun = dataStore.scalars.run
 
     dataStore.scalars = {
-        'ADC': scalars[0].SCAR[1],
-        'TDC': scalars[1].SCTR[1],
-        'ratio1': scalars[0].SCAR[1]/dataStore.rateData[dataStore.rateData.length - 1][1],
+        'accepted': scalars[0].SCAR[26],
+        'ssb': scalars[0].SCAR[27],
+        'clock': scalars[0].SCAR[28],
+        'scint': scalars[0].SCAR[29],
+        'ic': scalars[0].SCAR[30],
+        'free': scalars[0].SCAR[31],
+        'ratio1': scalars[0].SCAR[29]/scalars[0].SCAR[30],
         'ratio2': dataStore.rateData[dataStore.rateData.length - 1][3]/dataStore.rateData[dataStore.rateData.length - 1][2], //scalars[1].SCTR[1],
-        'run': scalars[2]['Run number']
+        'run': scalars[1]['Run number']
     }
 }

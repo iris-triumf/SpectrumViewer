@@ -37,41 +37,33 @@ function setupDataStore(){
 
     //declare top level groups
     var topGroups = [
-        {
-            "name": "Hit Patterns & Sums",
-            "id": "hitsAndSums",
-            "color": '#367FA9',
-            "subGroups": [
-                {
-                    "subname": "Hit Patterns",
-                    "id": "hits",
-                    "items": [
-                        'YdHits',
-                        'CsI1Hits',
-                        'CsI2Hits',
-                        'Sd1rHits',
-                        'Sd1sHits',
-                        'Sd2rHits',
-                        'Sd2sHits'
-                    ]
-                },
-                {
-                    "subname": "Sum Spectra",
-                    "id": "sums",
-                    "items": [
-                        'SUM_Singles_Energy',
-                        'SUM_Addback_Energy'
-                    ]
-                }
-            ]
-        },
-		
 		{
             "name": "Overview",
             "id": "IC-SSB",
             "color": '#367FA9',
             "subGroups": [
-                {
+				{
+					"subname": "Hit Patterns",
+                    "id": "hits",
+                    "items": [
+                        'CsI1Hits',
+                        'CsI2Hits',
+                        'Sd1rHits',
+                        'Sd1sHits',
+                        'Sd2rHits',
+                        'Sd2sHits',
+                        'Yd1Hits',
+                        'Yd2Hits',
+                        'Yd3Hits',
+                        'Yd4Hits',
+                        'Yd5Hits',
+                        'Yd6Hits',
+                        'Yd7Hits',
+                        'Yd8Hits',
+                        'YdHits'
+                    ]
+				},
+				{
                     "subname": "Energy",
                     "id": "IC_E",
                     "items": [
