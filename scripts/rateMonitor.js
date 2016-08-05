@@ -107,7 +107,7 @@ function setupDataStore(){
                 'lvlID': 'free'
             },
 			{
-                'title': 'Deadtime',
+                'title': 'Deadtime %',
                 'lvlID': 'deadtime'
             },
 			{
@@ -199,7 +199,7 @@ function parseScalars(scalars){
         'free': scalars[0].SCAR[31],
         'sclr_ratio': scalars[0].SCAR[29]/scalars[0].SCAR[30],
         'ic_ratio': dataStore.rateData[dataStore.rateData.length - 1][3]/dataStore.rateData[dataStore.rateData.length - 1][2], //scalars[1].SCTR[1],
-        'deadtime': scalars[0].SCAR[26]/scalars[0].SCAR[31],
+        'deadtime': (1-scalars[0].SCAR[26]/scalars[0].SCAR[31])*100,
         'run': scalars[1]['Run number']
     }
 }
