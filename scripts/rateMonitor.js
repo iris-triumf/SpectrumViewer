@@ -107,12 +107,16 @@ function setupDataStore(){
                 'lvlID': 'free'
             },
 			{
+                'title': 'Deadtime',
+                'lvlID': 'deadtime'
+            },
+			{
                 'title': 'Scint/IC',
-                'lvlID': 'ratio1'
+                'lvlID': 'sclr_ratio'
             },
 			{
                 'title': 'IC Ratio',
-                'lvlID': 'ratio2'
+                'lvlID': 'ic_ratio'
             }
 
         ]
@@ -193,8 +197,9 @@ function parseScalars(scalars){
         'scint': scalars[0].SCAR[29],
         'ic': scalars[0].SCAR[30],
         'free': scalars[0].SCAR[31],
-        'ratio1': scalars[0].SCAR[29]/scalars[0].SCAR[30],
-        'ratio2': dataStore.rateData[dataStore.rateData.length - 1][3]/dataStore.rateData[dataStore.rateData.length - 1][2], //scalars[1].SCTR[1],
+        'sclr_ratio': scalars[0].SCAR[29]/scalars[0].SCAR[30],
+        'ic_ratio': dataStore.rateData[dataStore.rateData.length - 1][3]/dataStore.rateData[dataStore.rateData.length - 1][2], //scalars[1].SCTR[1],
+        'deadtime': scalars[0].SCAR[26]/scalars[0].SCAR[31],
         'run': scalars[1]['Run number']
     }
 }
