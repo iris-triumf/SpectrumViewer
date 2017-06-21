@@ -29,7 +29,7 @@ function setupDataStore(){
 		Sd2Codes.push('Sd2Ch' + alwaysThisLong(i,2));
     }
 	for(i=0; i<64; i++){
-		SuCodes.push('Sd1Ch' + alwaysThisLong(i,2));
+		SuCodes.push('SuCh' + alwaysThisLong(i,2));
     }
 	for(i=0; i<32; i++){
 		CsICodes.push('CsICh' + alwaysThisLong(i,2));
@@ -52,6 +52,8 @@ function setupDataStore(){
                         'Sd1sHits',
                         'Sd2rHits',
                         'Sd2sHits',
+                        'SurHits',
+                        'SusHits',
                         'Yd1Hits',
                         'Yd2Hits',
                         'Yd3Hits',
@@ -60,7 +62,17 @@ function setupDataStore(){
                         'Yd6Hits',
                         'Yd7Hits',
                         'Yd8Hits',
-                        'YdHits'
+                        'YdHits',
+                        'Yud1Hits',
+                        'Yud2Hits',
+                        'Yud3Hits',
+                        'Yud4Hits',
+                        'Yud5Hits',
+                        'Yud6Hits',
+                        'Yud7Hits',
+                        'Yud8Hits',
+                        'YudHits'
+
                     ]
 				},
 				{
